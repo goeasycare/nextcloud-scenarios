@@ -1,0 +1,140 @@
+# Environment Variables and Secrets
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+*.p12
+*.pfx
+secrets/
+credentials/
+
+# Docker and Container Files
+docker-compose.override.yml
+.dockerignore
+
+# Terraform Files
+*.tfstate
+*.tfstate.*
+*.tfvars
+!*.tfvars.example
+.terraform/
+.terraform.lock.hcl
+terraform.rc
+.terraformrc
+crash.log
+crash.*.log
+
+# Kubernetes Files
+kubeconfig
+*.kubeconfig
+kube-config
+helm/values-local.yml
+helm/values-production.yml
+
+# IDE and Editor Files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# OS Generated Files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Logs and Debug Files
+*.log
+logs/
+debug/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Backup Files
+*.bak
+*.backup
+*.old
+*.orig
+
+# Temporary Files
+tmp/
+temp/
+*.tmp
+*.temp
+
+# Node.js (if used for any tooling)
+node_modules/
+npm-debug.log
+yarn-error.log
+.npm
+.yarn-integrity
+
+# Python (if used for any tooling)
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Data Directories (bind mounts)
+# Uncomment these if you want to ignore local data directories
+# nextcloud-files/
+# postgres-data/
+# redis-data/
+
+# Certificate Files
+*.crt
+*.cert
+*.ca-bundle
+*.p7b
+*.p7s
+*.spc
+
+# SSH Keys
+id_rsa
+id_dsa
+id_ecdsa
+id_ed25519
+*.pub
+known_hosts
+
+# GPG Keys
+*.gpg
+*.asc
+secring.*
+
+# Local Configuration Overrides
+config.local.*
+settings.local.*
+local.properties
+
+# Development and Testing
+test-results/
+coverage/
+.nyc_output
+.coverage
+htmlcov/
+
+# Build Artifacts
+dist/
+build/
+target/
+out/
+
+# Package Manager Lock Files (usually committed, but can be ignored if needed)
+# package-lock.json
+# yarn.lock
+# Pipfile.lock
