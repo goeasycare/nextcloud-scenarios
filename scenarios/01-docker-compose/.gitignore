@@ -1,0 +1,49 @@
+# Environment Variables and Secrets
+.env
+.env.*
+!.env.example
+
+# Docker Compose
+docker-compose.override.yml
+docker-compose.override.yaml
+
+# Docker
+.dockerignore
+
+# Data Volumes (uncomment if you want to ignore local data)
+# nextcloud-files/
+# postgres-data/
+# mysql-data/
+# redis-data/
+
+# Logs
+*.log
+logs/
+
+# IDE and Editor Files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS Generated Files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Temporary Files
+tmp/
+temp/
+*.tmp
+*.temp
+
+# Backup Files
+*.bak
+*.backup
+*.old
+*.orig

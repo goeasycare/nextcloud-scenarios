@@ -1,0 +1,67 @@
+# Terraform Files
+*.tfstate
+*.tfstate.*
+*.tfvars
+!*.tfvars.example
+.terraform/
+.terraform.lock.hcl
+terraform.rc
+.terraformrc
+crash.log
+crash.*.log
+.terragrunt-cache/
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Terraform Plan Files
+*.tfplan
+*.plan
+
+# Environment Variables and Secrets
+.env
+.env.*
+!.env.example
+
+# Kubernetes Files
+kubeconfig
+*.kubeconfig
+kube-config
+config
+
+# Helm (if used)
+helm/values-local.yml
+helm/values-production.yml
+
+# Logs
+*.log
+logs/
+
+# IDE and Editor Files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS Generated Files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Temporary Files
+tmp/
+temp/
+*.tmp
+*.temp
+
+# Backup Files
+*.bak
+*.backup
+*.old
+*.orig
