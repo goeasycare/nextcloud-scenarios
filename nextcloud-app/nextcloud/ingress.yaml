@@ -1,0 +1,28 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: nextcloud-ingress
+  namespace: nextcloud
+  annotations:
+    cert-manager.io/issuer: "origin-issuer"
+    cert-manager.io/issuer-kind: "ClusterOriginIssuer"
+    cert-manager.io/issuer-group: "cert-manager.k8s.cloudflare.com"
+    nginx.ingress.kubernetes.io/proxy-body-size: "512m"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    kubernetes.io/ingress.class: "nginx"
+spec:
+  tls:
+  - hosts:
+    - nextcloud.goeasycare.app
+    secretName: nextcloud-tls
+  rules:
+  - host: nextcloud.goeasycare.app
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: nextcloud
+            port:
+              number: 8080

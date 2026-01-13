@@ -138,3 +138,8 @@ out/
 # package-lock.json
 # yarn.lock
 # Pipfile.lock
+nextcloud-app/nextcloud/secrets.auto.tfvars
+nextcloud-app/nextcloud/secrets.yaml
+nextcloud-app/nextcloud/terraform.tfstate
+nextcloud-app/nextcloud/terraform.tfstate.backup
+nextcloud-app/nextcloud/.terraform/
