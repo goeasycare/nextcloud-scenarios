@@ -1,0 +1,16 @@
+name: Argo CD Manual Sync
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Refresh Argo CD Application
+        run: |
+          curl -X POST \
+            -H "Authorization: Bearer ${{ secrets.ARGOCD_TOKEN }}" \
+            -k https://${{ secrets.ARGOCD_SERVER }}/api/v1/applications/nextcloud/sync
