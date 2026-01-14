@@ -18,15 +18,17 @@ spec:
           - list:
               elements:
                 - repoURL: https://github.com/goeasycare/terraform-development-cluster.git
+                  revision: terraform-development-cluster-argo
 
     # 2. New List Generator for Nextcloud (External)
     - list:
         elements:
           - name: nextcloud
             repoURL: https://github.com/goeasycare/nextcloud-scenarios
-            path: nextcloud-app
+            path: nextcloud-app/nextcloud
             # Explicitly set namespace for Nextcloud, since it doesn't follow the folder-name pattern
             destNamespace: nextcloud
+            revision: nextcloud-argo
 
   template:
     metadata:
@@ -36,7 +38,7 @@ spec:
       project: default
       source:
         repoURL: '{{ .repoURL }}'
-        targetRevision: HEAD
+        targetRevision: '{{ default "HEAD" .revision }}'
         path: '{{ .path }}'
       destination:
         server: https://kubernetes.default.svc
