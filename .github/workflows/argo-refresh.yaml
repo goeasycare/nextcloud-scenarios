@@ -10,7 +10,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Refresh Argo CD Application
+        env:
+          ARGOCD_SERVER: ${{ secrets.ARGOCD_SERVER }}
+          ARGOCD_TOKEN: ${{ secrets.ARGOCD_TOKEN }}
         run: |
+          if [ -z "$ARGOCD_SERVER" ]; then
+            echo "Error: ARGOCD_SERVER secret is not set."
+            exit 1
+          fi
+          if [ -z "$ARGOCD_TOKEN" ]; then
+            echo "Error: ARGOCD_TOKEN secret is not set."
+            exit 1
+          fi
+
           curl -X POST \
-            -H "Authorization: Bearer ${{ secrets.ARGOCD_TOKEN }}" \
-            -k https://${{ secrets.ARGOCD_SERVER }}/api/v1/applications/nextcloud/sync
+            -H "Authorization: Bearer $ARGOCD_TOKEN" \
+            -k "https://${ARGOCD_SERVER}/api/v1/applications/nextcloud/sync"
