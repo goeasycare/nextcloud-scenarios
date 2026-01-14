@@ -7,7 +7,7 @@ spec:
   goTemplate: true
   generators:
     # 1. Existing Git Generator (Internal/Cluster Apps)
-    # Wrapped in a Matrix to inject the repoURL which isn't provided by the 'directories' generator alone
+    # Wrapped in a Matrix to inject the repoURL which isn't provided by the 'directories' generator alone.
     - matrix:
         generators:
           - git:
