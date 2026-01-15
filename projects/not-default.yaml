@@ -1,18 +1,19 @@
 apiVersion: argoproj.io/v1alpha1
 kind: AppProject
 metadata:
-  name: nextcloud
+  name: not-default
   namespace: argocd
 spec:
   description: Nextcloud Applications Project
   destinations:
-    - name: '*'
-      namespace: nextcloud
+    - name: nextcloud
+      namespace: argocd
       server: https://kubernetes.default.svc
   sourceRepos:
     # - https://github.com/goeasycare/terraform-development-cluster.git
     - https://github.com/goeasycare/nextcloud-scenarios
-  sourceNamespaces: '*'
+  sourceNamespaces:
+    - '*'
   clusterResourceWhitelist:
     - group: '*'
       kind: '*'

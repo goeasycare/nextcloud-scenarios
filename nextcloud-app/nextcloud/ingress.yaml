@@ -10,7 +10,10 @@ metadata:
     nginx.ingress.kubernetes.io/proxy-body-size: "512m"
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
     kubernetes.io/ingress.class: "nginx"
+    # This replaces your "cloudflare_record" nextcloud.tf Terraform resource
+    external-dns.alpha.kubernetes.io/hostname: nextcloud.goeasycare.app
 spec:
+  # type: LoadBalancer
   tls:
   - hosts:
     - nextcloud.goeasycare.app

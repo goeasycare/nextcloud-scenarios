@@ -2,16 +2,16 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: nextcloud
-  namespace: argocd
+  namespace: nextcloud
 spec:
-  project: default
+  project: nextcloud
   source:
     repoURL: https://github.com/goeasycare/nextcloud-scenarios
     targetRevision: nextcloud-argo
     path: nextcloud-app/nextcloud
   destination:
     server: https://kubernetes.default.svc
-    namespace: nextcloud
+    namespace: argocd
   syncPolicy:
     automated:
       prune: true

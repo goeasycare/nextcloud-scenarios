@@ -2,7 +2,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
   name: main-flotilla
-  namespace: argocd
+  namespace: nextcloud
 spec:
   goTemplate: true
   generators:
