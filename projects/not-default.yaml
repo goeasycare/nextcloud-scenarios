@@ -10,7 +10,8 @@ spec:
       namespace: nextcloud
       server: https://kubernetes.default.svc
   sourceRepos:
-    - https://github.com/goeasycare/terraform-development-cluster.git
+    # - https://github.com/goeasycare/terraform-development-cluster.git
+    - https://github.com/goeasycare/nextcloud-scenarios
   sourceNamespaces: '*'
   clusterResourceWhitelist:
     - group: '*'
