@@ -18,6 +18,8 @@ spec:
   selector:
     matchLabels:
       app: redis
+  strategy:
+    type: Recreate    
   replicas: 1
   template:
     metadata:
