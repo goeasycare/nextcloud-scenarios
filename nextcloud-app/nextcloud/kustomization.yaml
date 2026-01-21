@@ -8,7 +8,6 @@ resources:
   - postgres.yaml
   - pvc.yaml
   - redis.yaml
-  - secrets.yaml
 
 ## Uncomment and adjust the image section below as needed. ##
 ## This allows ArgoCD to cleanly override the image tag for PRs 
