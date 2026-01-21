@@ -1,0 +1,36 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: nextcloud-pr-generator
+  namespace: nextcloud
+spec:
+  generators:
+  - pullRequest:
+      github:
+        # The repo where the application code & Dockerfile live
+        owner: goeasycare
+        repo: terraform-development-cluster
+      requeueAfterSeconds: 60
+  template:
+    metadata:
+      name: 'nextcloud-pr-{{number}}'
+    spec:
+      project: default
+      source:
+        # The repo where the manifests (kustomization.yaml) live
+        repoURL: https://github.com/goeasycare/nextcloud-scenarios
+        targetRevision: nextcloud-argo # Assuming this is the main branch for manifests as per install.yaml
+        path: nextcloud-app/nextcloud
+        kustomize:
+          images:
+          # Override the image with the one built for this PR (using the PR's Head SHA)
+          - 'nextcloud:fpm=ghcr.io/goeasycare/terraform-development-cluster:{{head_sha}}'
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: 'nextcloud-pr-{{number}}'
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true

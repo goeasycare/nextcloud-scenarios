@@ -20,6 +20,8 @@ spec:
   selector:
     matchLabels:
       app: nextcloud
+  strategy:
+    type: Recreate
   replicas: 1
   template:
     metadata:
@@ -28,9 +30,7 @@ spec:
     spec:
       containers:
       - name: nextcloud
-        image: nextcloud:28-apache
-        ports:
-        - containerPort: 80
+        image: nextcloud:fpm
         env:
         - name: POSTGRES_HOST
           value: postgres
@@ -63,7 +63,20 @@ spec:
         volumeMounts:
         - name: nextcloud-data
           mountPath: /var/www/html
+      - name: nginx
+        image: nginx:alpine
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: nextcloud-data
+          mountPath: /var/www/html
+        - name: nginx-config
+          mountPath: /etc/nginx/nginx.conf
+          subPath: nginx.conf
       volumes:
       - name: nextcloud-data
         persistentVolumeClaim:
           claimName: nextcloud-data
+      - name: nginx-config
+        configMap:
+          name: nginx-config
