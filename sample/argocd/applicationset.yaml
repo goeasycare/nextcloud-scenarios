@@ -1,0 +1,36 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: nextcloud-stack
+  namespace: argocd
+spec:
+  # The generator determines "where" to deploy. 
+  # For this MWE, we use a simple List generator to simulate one target environment (e.g., 'production').
+  # In a real scenario, this could be a Cluster generator or Git generator.
+  generators:
+  - list:
+      elements:
+      - cluster: https://kubernetes.default.svc
+        namespace: nextcloud
+        env: prod
+  
+  template:
+    metadata:
+      name: 'nextcloud-{{env}}'
+      labels:
+        app-type: nextcloud-stack
+    spec:
+      project: default
+      source:
+        repoURL: "https://github.com/goeasycare/nextcloud-scenarios.git"
+        targetRevision: HEAD
+        path: sample/app
+      destination:
+        server: '{{cluster}}'
+        namespace: '{{namespace}}'
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true

@@ -1,0 +1,44 @@
+apiVersion: argoproj.io/v1alpha1
+kind: WorkflowTemplate
+metadata:
+  name: nextcloud-build-push
+spec:
+  entrypoint: build-and-publish
+  arguments:
+    parameters:
+      - name: git-tag
+      - name: git-repo
+  templates:
+    - name: build-and-publish
+      inputs:
+        parameters:
+          - name: git-tag
+          - name: git-repo
+      container:
+        image: gcr.io/kaniko-project/executor:latest
+        args:
+          # Context is the root of the repo
+          - "--context={{inputs.parameters.git-repo}}#refs/tags/{{inputs.parameters.git-tag}}"
+          # Dockerfile is located in sample/build/
+          - "--dockerfile=sample/build/Dockerfile"
+          # Configured for ghcr.io/goeasycare/nextcloud-custom
+          - "--destination=ghcr.io/goeasycare/nextcloud-custom:{{inputs.parameters.git-tag}}"
+          - "--destination=ghcr.io/goeasycare/nextcloud-custom:latest"
+        volumeMounts:
+          - name: docker-config
+            mountPath: /kaniko/.docker/
+      volumes:
+        - name: docker-config
+          secret:
+            # Using existing secret 'ghcr-creds' found in argo-nextc-stuff
+            secretName: ghcr-creds
+            items:
+              - key: .dockerconfigjson
+                path: config.json
+
+    # TODO: Add a step here or use an external process to update the 'sample/app/kustomization.yaml'
+    # with the new image tag. This closes the GitOps loop.
+    # Example:
+    # - name: update-gitops-repo
+    #   ... (git clone, edit kustomization.yaml, git commit, git push)
+
