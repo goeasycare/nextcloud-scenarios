@@ -1,0 +1,48 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Sensor
+metadata:
+  name: github-release-sensor
+spec:
+  template:
+    serviceAccountName: workflow-sa # Needs permission to create Workflows
+  dependencies:
+    - name: release-dep
+      eventSourceName: github-release
+      eventName: nextcloud-release
+      filters:
+        data:
+          # Only trigger on 'published' action for releases
+          - path: body.action
+            type: string
+            value:
+              - published
+  triggers:
+    - template:
+        name: trigger-build
+        k8s:
+          operation: create
+          source:
+            resource:
+              apiVersion: argoproj.io/v1alpha1
+              kind: Workflow
+              metadata:
+                generateName: nextcloud-build-
+              spec:
+                serviceAccountName: workflow-sa
+                workflowTemplateRef:
+                  name: nextcloud-build-push
+                arguments:
+                  parameters:
+                  - name: git-tag
+                    value: "latest" # Placeholder, will be replaced
+                  - name: git-repo
+                    value: "default" # Placeholder
+          parameters:
+            - src:
+                dependencyName: release-dep
+                dataKey: body.release.tag_name
+              dest: spec.arguments.parameters.0.value
+            - src:
+                dependencyName: release-dep
+                dataKey: body.repository.clone_url
+              dest: spec.arguments.parameters.1.value

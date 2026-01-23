@@ -1,0 +1,13 @@
+apiVersion: argoproj.io/v1alpha1
+kind: EventBus
+metadata:
+  name: default
+spec:
+  nats:
+    native:
+      # Use persistence for better reliability
+      persistence:
+        strategy: "File"
+        accessMode: ReadWriteOnce
+        volumeSize: 1Gi
+      auth: token
