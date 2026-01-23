@@ -3,12 +3,35 @@ kind: WorkflowTemplate
 metadata:
   name: nextcloud-build-push
 spec:
-  entrypoint: build-and-publish
+  entrypoint: main
   arguments:
     parameters:
       - name: git-tag
       - name: git-repo
   templates:
+    - name: main
+      inputs:
+        parameters:
+          - name: git-tag
+          - name: git-repo
+      steps:
+        - - name: build-and-push
+            template: build-and-publish
+            arguments:
+              parameters:
+                - name: git-tag
+                  value: "{{inputs.parameters.git-tag}}"
+                - name: git-repo
+                  value: "{{inputs.parameters.git-repo}}"
+        - - name: update-manifests
+            template: update-gitops-repo
+            arguments:
+              parameters:
+                - name: git-tag
+                  value: "{{inputs.parameters.git-tag}}"
+                - name: git-repo
+                  value: "{{inputs.parameters.git-repo}}"
+
     - name: build-and-publish
       inputs:
         parameters:
@@ -36,9 +59,53 @@ spec:
               - key: .dockerconfigjson
                 path: config.json
 
-    # TODO: Add a step here or use an external process to update the 'sample/app/kustomization.yaml'
-    # with the new image tag. This closes the GitOps loop.
-    # Example:
-    # - name: update-gitops-repo
-    #   ... (git clone, edit kustomization.yaml, git commit, git push)
+    - name: update-gitops-repo
+      inputs:
+        parameters:
+          - name: git-tag
+          - name: git-repo
+      script:
+        image: alpine/git:latest
+        command: [sh]
+        source: |
+          set -e
 
+          # Install kustomize
+          apk add --no-cache curl
+          curl -s \
+            "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh" \
+            | sh
+          mv kustomize /usr/local/bin/
+
+          # Configure git
+          git config --global user.email "argoworkflow@example.com"
+          git config --global user.name "Argo Workflow"
+
+          # Clone the repository
+          REPO_URL="{{inputs.parameters.git-repo}}"
+          git clone "$REPO_URL" /work
+          cd /work
+
+          # Update the kustomization.yaml with the new image tag
+          cd sample/app
+          kustomize edit set image \
+            ghcr.io/goeasycare/nextcloud-custom=ghcr.io/goeasycare/nextcloud-custom:{{inputs.parameters.git-tag}}
+
+          # Commit and push changes
+          git add kustomization.yaml
+          git commit -m \
+            "Update Nextcloud image to tag {{inputs.parameters.git-tag}}"
+          git push origin main
+        volumeMounts:
+          - name: git-credentials
+            mountPath: /root/.git-credentials
+            subPath: .git-credentials
+          - name: git-credentials
+            mountPath: /root/.gitconfig
+            subPath: .gitconfig
+      volumes:
+        - name: git-credentials
+          secret:
+            # Secret should contain .git-credentials and .gitconfig files
+            # with GitHub authentication configured
+            secretName: git-creds

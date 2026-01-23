@@ -20,7 +20,10 @@ This folder contains a complete reference implementation for a Nextcloud CI/CD p
 
 ## Quick Start
 
-1.  **Secrets**: Follow the instructions in [secrets/README.md](secrets/README.md) to create the necessary kubernetes secrets.
+1.  **Secrets**: Follow the instructions in [../EXAMPLE-SCOPE.md](../EXAMPLE-SCOPE.md) Step 1 to create the necessary kubernetes secrets:
+    *   `ghcr-creds`: Docker credentials for pushing images to GitHub Container Registry
+    *   `github-access`: Webhook secret for validating GitHub events
+    *   `git-creds`: Git credentials for updating GitOps manifests
 2.  **Configuration**: Search for all `TODO` comments in the YAML files and replace them with your repository details (Owner, Repo Name, URLs).
     *   `events/eventsource.yaml`
     *   `workflow/build-push-workflow.yaml`

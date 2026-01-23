@@ -62,6 +62,37 @@ kubectl create secret generic github-access \
   -n argocd
 ```
 
+**C. Git Credentials Secret (For updating GitOps manifests)**
+This secret is used by the workflow to clone the repository, update the kustomization.yaml, and push changes back to GitHub.
+```bash
+# REPLACEMENT REQUIRED:
+# <YOUR_USERNAME>: Your GitHub username
+# <YOUR_PAT>: The token you generated in step 1 (must have repo write access)
+# Create a temporary directory
+mkdir -p /tmp/git-secret
+
+# Create .git-credentials file
+cat > /tmp/git-secret/.git-credentials <<EOF
+https://<YOUR_USERNAME>:<YOUR_PAT>@github.com
+EOF
+
+# Create .gitconfig file
+cat > /tmp/git-secret/.gitconfig <<EOF
+[credential]
+    helper = store
+EOF
+
+# Create the Kubernetes secret
+kubectl create secret generic git-creds \
+  --from-file=.git-credentials=/tmp/git-secret/.git-credentials \
+  --from-file=.gitconfig=/tmp/git-secret/.gitconfig \
+  -n argocd
+
+# Clean up
+rm -rf /tmp/git-secret
+```
+
+
 ## Step 2: Configuration TODOs
 
 The files in `sample/` contain `TODO` placeholders. You must update them to match your project.
