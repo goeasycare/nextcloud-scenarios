@@ -130,7 +130,7 @@ htmlcov/
 
 # Build Artifacts
 dist/
-build/
+# build/
 target/
 out/
 
@@ -143,3 +143,7 @@ nextcloud-app/nextcloud/secrets.yaml
 nextcloud-app/nextcloud/terraform.tfstate
 nextcloud-app/nextcloud/terraform.tfstate.backup
 nextcloud-app/nextcloud/.terraform/
+
+
+argo-nextc-stuff/*
+sample/app/secrets.yaml

@@ -13,6 +13,7 @@ jobs:
         env:
           ARGOCD_SERVER: ${{ secrets.ARGOCD_SERVER }}
           ARGOCD_TOKEN: ${{ secrets.ARGOCD_TOKEN }}
+          GITHUB_PAT: ${{ secrets.GITHUB_PAT }}
         run: |
           if [ -z "$ARGOCD_SERVER" ]; then
             echo "Error: ARGOCD_SERVER secret is not set."

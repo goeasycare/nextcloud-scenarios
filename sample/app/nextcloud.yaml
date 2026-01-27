@@ -30,7 +30,7 @@ spec:
     spec:
       containers:
       - name: nextcloud
-        image: nextcloud:fpm
+        image: ghcr.io/goeasycare/nextcloud:latest
         env:
         - name: POSTGRES_HOST
           value: postgres

@@ -1,0 +1,66 @@
+apiVersion: argoproj.io/v1alpha1
+kind: WorkflowTemplate
+metadata:
+  name: nextcloud-build-push
+spec:
+  entrypoint: main
+  arguments:
+    parameters:
+      - name: git-repo
+        value: "https://github.com/goeasycare/nextcloud-scenarios"
+      - name: git-tag
+        value: "main"
+  templates:
+    - name: main
+      dag:
+        tasks:
+          - name: build-push
+            template: build-kaniko
+            arguments:
+              parameters:
+                - name: repo
+                  value: "{{workflow.parameters.git-repo}}"
+                - name: tag
+                  value: "{{workflow.parameters.git-tag}}"
+
+    - name: build-kaniko
+      inputs:
+        parameters:
+          - name: repo
+          - name: tag
+      container:
+        image: gcr.io/kaniko-project/executor:latest
+        command: ["/kaniko/executor"]
+        args:
+          - "--dockerfile=sample/build/Dockerfile"
+          - "--context=dir:///workspace/sample/build/"
+          - "--destination=ghcr.io/goeasycare/nextcloud:{{inputs.parameters.tag}}"
+          - "--destination=ghcr.io/goeasycare/nextcloud:latest"
+        volumeMounts:
+          - name: docker-config
+            mountPath: /kaniko/.docker/
+          - name: workdir
+            mountPath: /workspace
+      initContainers:
+        - name: git-clone
+          image: alpine/git
+          args:
+            - clone
+            - --branch
+            - "{{inputs.parameters.tag}}"
+            - --depth
+            - "1"
+            - "{{inputs.parameters.repo}}"
+            - "/workspace"
+          volumeMounts:
+            - name: workdir
+              mountPath: /workspace
+      volumes:
+        - name: docker-config
+          secret:
+            secretName: docker-config-secret
+            items:
+              - key: .dockerconfigjson
+                path: config.json
+        - name: workdir
+          emptyDir: {}

@@ -1,0 +1,33 @@
+apiVersion: argoproj.io/v1alpha1
+kind: EventSource
+metadata:
+  name: github-eventsource
+  namespace: argocd
+spec:
+  eventBusName: default
+  service:
+    ports:
+      - port: 12000
+        targetPort: 12000
+  github:
+    nextcloud-release:
+      owner: "goeasycare"
+      repository: "nextcloud-scenarios"
+      webhook:
+        endpoint: "/release"
+        port: "12000"
+        method: "POST"
+        url: "https://events.goeasycare.app/release" # cluster ingress address
+        events:
+        - "release" # Listens for 'release' events (published, etc.)
+      apiToken:
+        name: github-access
+        key: token
+      webhookSecret:
+        name: github-access
+        key: secret
+      insecure: false
+      # Set to 'true' to have Argo manage the webhook registration on GitHub.
+      # Set to 'false' if you want to create the Webhook manually in GitHub settings.
+      active: true
+      contentType: "json"
