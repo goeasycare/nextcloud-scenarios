@@ -26,6 +26,8 @@ spec:
       labels:
         app: nextcloud
     spec:
+      imagePullSecrets:
+      - name: docker-config-secret
       containers:
       - name: nextcloud
         image: ghcr.io/goeasycare/nextcloud:latest
