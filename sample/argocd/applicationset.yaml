@@ -20,6 +20,7 @@ spec:
       source:
         repoURL: https://github.com/goeasycare/nextcloud-scenarios
         targetRevision: nextcloud-argo
+        # targetRevision: {{branch}} # Uncomment to use branch from generator
         path: sample/app
       destination:
         server: '{{url}}'
