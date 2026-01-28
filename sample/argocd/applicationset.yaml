@@ -24,7 +24,7 @@ spec:
         path: sample/app
       destination:
         server: '{{url}}'
-        namespace: nextcloud
+        namespace: 'nextcloud-{{cluster}}'
       syncPolicy:
         automated:
           prune: true
