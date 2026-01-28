@@ -6,8 +6,8 @@ resources:
   - postgres.yaml
   - pvc.yaml
   - redis.yaml
-  - secrets.yaml
-  - ingress.yaml
+  # - secrets.yaml # Secrets are managed manually to avoid committing them to Git as that is unsafe.
+
 # Uncomment and adjust the image section below as needed. #
 # This allows ArgoCD to cleanly override the image tag for PRs 
 # without changing your source files or affecting the main deployment.
