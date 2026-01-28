@@ -2,13 +2,16 @@ apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
   name: nextcloud-stack
-  namespace: nextcloud
+  namespace: argocd
 spec:
   generators:
     - list:
         elements:
           - cluster: in-cluster
             url: https://kubernetes.default.svc
+          - cluster: remote-cluster
+            url: https://kubernetes.default.svc
+          - branch: nextcloud-argo
   template:
     metadata:
       name: nextcloud
@@ -16,7 +19,7 @@ spec:
       project: default
       source:
         repoURL: https://github.com/goeasycare/nextcloud-scenarios
-        targetRevision: HEAD
+        targetRevision: '{{branch}}'
         path: sample/app
       destination:
         server: '{{url}}'
