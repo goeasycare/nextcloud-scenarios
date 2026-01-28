@@ -1,8 +1,8 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: nextcloud-ingress
-  namespace: nextcloud
+  name: events-ingress
+  namespace: argocd  # CHANGED: Must match EventSource namespace
   annotations:
     cert-manager.io/issuer: "origin-issuer"
     cert-manager.io/issuer-kind: "ClusterOriginIssuer"
@@ -13,14 +13,18 @@ metadata:
     # If you use Cert Manager for TLS:
     # cert-manager.io/cluster-issuer: letsencrypt-prod
 spec:
+  tls:   # ADDED: Required for cert-manager to store the cert
+  - hosts:
+    - events.goeasycare.app
+    secretName: events-tls
   rules:
-  - host: nextcloud.goeasycare.app
+  - host: events.goeasycare.app
     http:
       paths:
       - path: /
         pathType: Prefix
         backend:
           service:
-            name: nextcloud
+            name: github-eventsource-eventsource-svc # CHANGED: Standard Argo Events naming
             port:
-              number: 8080
+              number: 12000 # CHANGED: Matches eventsource.yaml
