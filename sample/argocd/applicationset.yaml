@@ -14,7 +14,7 @@ spec:
           - branch: nextcloud-argo
   template:
     metadata:
-      name: nextcloud
+      name: 'nextcloud-{{cluster}}'
     spec:
       project: default
       source:
