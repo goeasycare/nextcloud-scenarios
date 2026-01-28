@@ -19,7 +19,7 @@ spec:
       project: default
       source:
         repoURL: https://github.com/goeasycare/nextcloud-scenarios
-        targetRevision: '{{branch}}'
+        targetRevision: nextcloud-argo
         path: sample/app
       destination:
         server: '{{url}}'
