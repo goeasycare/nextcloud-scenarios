@@ -14,7 +14,7 @@ resources:
 # ensures this file does not enforce a latest tag by default, 
 # so your main deployment stays stable on nextcloud:28-apache until you decide otherwise.
 
-images:
-  - name: nextcloud:28-apache
-    newName: ghcr.io/goeasycare/terraform-development-cluster
-    newTag: latest
+# images:
+#   - name: nextcloud:28-apache
+#     newName: ghcr.io/goeasycare/terraform-development-cluster
+#     newTag: latest
