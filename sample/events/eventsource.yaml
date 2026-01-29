@@ -23,9 +23,9 @@ spec:
       apiToken:
         name: github-access
         key: token
-      webhookSecret:
-        name: github-access
-        key: secret
+      # webhookSecret:
+      #   name: github-access
+      #   key: secret
       insecure: false
       # Set to 'true' to have Argo manage the webhook registration on GitHub.
       # Set to 'false' if you want to create the Webhook manually in GitHub settings.
