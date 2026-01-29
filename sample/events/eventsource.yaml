@@ -13,13 +13,13 @@ spec:
     nextcloud-release:
       owner: "goeasycare"
       repository: "nextcloud-scenarios"
+      events:
+        - "release" # Listens for 'release' events (published, etc.)
       webhook:
         endpoint: "/release"
         port: "12000"
         method: "POST"
         url: "https://events.goeasycare.app/release" # cluster ingress address
-        events:
-        - "release" # Listens for 'release' events (published, etc.)
       apiToken:
         name: github-access
         key: token
