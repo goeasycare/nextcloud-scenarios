@@ -1,0 +1,15 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Workflow
+metadata:
+  generateName: nextcloud-test-manual-
+  namespace: argocd
+spec:
+  serviceAccountName: operate-workflow-sa
+  workflowTemplateRef:
+    name: nextcloud-build-push
+  arguments:
+    parameters:
+    - name: git-tag
+      value: nextcloud-argo
+    - name: git-repo
+      value: https://github.com/goeasycare/nextcloud-scenarios
