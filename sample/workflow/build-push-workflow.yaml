@@ -34,7 +34,7 @@ spec:
         image: gcr.io/kaniko-project/executor:latest
         command: ["/kaniko/executor"]
         args:
-          - "--dockerfile=sample/build/Dockerfile"
+          - "--dockerfile=Dockerfile"
           - "--context=dir:///workspace/sample/build/"
           - "--destination=ghcr.io/goeasycare/nextcloud:{{inputs.parameters.tag}}"
           - "--destination=ghcr.io/goeasycare/nextcloud:latest"
