@@ -5,6 +5,7 @@ metadata:
   namespace: argocd
 spec:
   entrypoint: main
+  serviceAccountName: operate-workflow-sa
   arguments:
     parameters:
       - name: git-repo
