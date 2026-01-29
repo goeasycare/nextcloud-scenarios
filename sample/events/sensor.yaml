@@ -22,6 +22,7 @@ spec:
               metadata:
                 generateName: nextcloud-build-push-
               spec:
+                serviceAccountName: operate-workflow-sa
                 # We use the WorkflowTemplate defined in sample/workflow/
                 workflowTemplateRef:
                   name: nextcloud-build-push
