@@ -25,6 +25,6 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: github-eventsource-eventsource-svc # CHANGED: Standard Argo Events naming
+            name: github-event-source-eventsource-svc # EventSource creates a service where name is {{EventSource.metadata[0].name}}-eventsource-svc
             port:
               number: 12000 # CHANGED: Matches eventsource.yaml
