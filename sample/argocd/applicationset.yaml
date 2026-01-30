@@ -8,7 +8,6 @@ spec:
     - list:
         elements:
         # Defined two clusters: in-cluster (is dev) and remote-cluster (is prod), add more as needed
-        # Make sure the cluster URLs match those defined in your ArgoCD cluster settings
           - cluster: in-cluster
             url: https://kubernetes.default.svc
             branch: nextcloud-argo
