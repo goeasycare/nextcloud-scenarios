@@ -16,6 +16,7 @@ rules:
   - workflows
   - workflowtemplates
   - workflowtaskresults
+  - applications
   verbs:
   - create
   - get

@@ -1,33 +1,46 @@
 apiVersion: argoproj.io/v1alpha1
 kind: EventSource
 metadata:
-  name: github-eventsource
+  name: github-event-source
   namespace: argocd
 spec:
-  eventBusName: default
   service:
     ports:
       - port: 12000
         targetPort: 12000
   github:
-    nextcloud-release:
+    # 1. Listen for COMMITS (for in-cluster sync)
+    push-listener:
       owner: "goeasycare"
       repository: "nextcloud-scenarios"
       events:
-        - "release" # Listens for 'release' events (published, etc.)
+        - "push"
+      webhook:
+        endpoint: "/push"
+        port: "12000"
+        method: "POST"
+        url: "https://events.goeasycare.app/push"
+      webhookSecret:
+        name: github-access
+        key: secret
+      insecure: false
+      active: true
+      contentType: "json"
+      
+    # 2. Listen for RELEASES (for remote-cluster builds)
+    release-listener:
+      owner: "goeasycare"
+      repository: "nextcloud-scenarios"
+      events:
+        - "release"
       webhook:
         endpoint: "/release"
         port: "12000"
         method: "POST"
-        url: "https://events.goeasycare.app/release" # cluster ingress address
-      apiToken:
+        url: "https://events.goeasycare.app/release"
+      webhookSecret:
         name: github-access
-        key: token
-      # webhookSecret:
-      #   name: github-access
-      #   key: secret
+        key: secret
       insecure: false
-      # Set to 'true' to have Argo manage the webhook registration on GitHub.
-      # Set to 'false' if you want to create the Webhook manually in GitHub settings.
       active: true
       contentType: "json"
