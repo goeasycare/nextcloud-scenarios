@@ -30,7 +30,8 @@ spec:
       - name: docker-config-secret
       containers:
       - name: nextcloud
-        image: ghcr.io/goeasycare/nextcloud:latest
+        image: ghcr.io/goeasycare/nextcloud:main
+        imagePullPolicy: Always
         env:
         - name: POSTGRES_HOST
           value: postgres
