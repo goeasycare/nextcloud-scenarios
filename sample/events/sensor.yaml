@@ -20,7 +20,8 @@ spec:
         - path: "body.commits"
           type: string
           value: 
-            - ".*sample/app/nextcloud.yaml.*"
+            - "sample/app/nextcloud.yaml"
+            - "sample/argocd/applicationset.yaml"
           comparator: "regex"
 
   triggers:
