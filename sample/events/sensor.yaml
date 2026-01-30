@@ -1,18 +1,34 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Sensor
 metadata:
-  name: nextcloud-sensor
+  name: github-combined-sensor
   namespace: argocd
 spec:
   template:
-    serviceAccountName: operate-workflow-sa
+    serviceAccountName: argocd-server
   dependencies:
-    - name: nextcloud-dep
-      eventSourceName: github-eventsource
-      eventName: nextcloud-release
+    - name: push-dep
+      eventSourceName: github-event-source
+      eventName: push-listener
+    - name: release-dep
+      eventSourceName: github-event-source
+      eventName: release-listener
+
+  filters:
+    - name: file-path-filter
+      data:
+        - path: "body.commits"
+          type: string
+          value: 
+            - "sample/app/nextcloud.yaml"
+            - "sample/argocd/applicationset.yaml"
+          comparator: "regex"
+
   triggers:
     - template:
-        name: nextcloud-workflow-trigger
+        name: sync-in-cluster
+        # Only active on filtered push
+        conditions: "push-dep && file-path-filter"
         k8s:
           operation: create
           source:
@@ -20,24 +36,50 @@ spec:
               apiVersion: argoproj.io/v1alpha1
               kind: Workflow
               metadata:
-                generateName: nextcloud-build-push-
+                generateName: sync-in-cluster-
+              spec:
+                entrypoint: argocd-sync
+                serviceAccountName: operate-workflow-sa
+                templates:
+                - name: argocd-sync
+                  container:
+                    image: argoproj/argocd:v2.8.4
+                    command: [sh, -c]
+                    args: 
+                      - |
+                        argocd app sync nextcloud-in-cluster \
+                          --core \
+                          --server argocd-server.argocd.svc.cluster.local:443 \
+                          --prune
+
+    - template:
+        name: build-for-release
+        # Only active on release
+        conditions: "release-dep"
+        k8s:
+          operation: create
+          source:
+            resource:
+              apiVersion: argoproj.io/v1alpha1
+              kind: Workflow
+              metadata:
+                generateName: build-release-
               spec:
                 serviceAccountName: operate-workflow-sa
-                # We use the WorkflowTemplate defined in sample/workflow/
                 workflowTemplateRef:
                   name: nextcloud-build-push
                 arguments:
                   parameters:
                   - name: git-tag
-                    value: "main" # Map this from event payload
+                    value: "main"
                   - name: git-repo
                     value: "https://github.com/goeasycare/nextcloud-scenarios"
           parameters:
             - src:
-                dependencyName: nextcloud-dep
+                dependencyName: release-dep
                 dataKey: body.release.tag_name
               dest: k8s.source.resource.spec.arguments.parameters.0.value
             - src:
-                dependencyName: nextcloud-dep
+                dependencyName: release-dep
                 dataKey: body.repository.clone_url
               dest: k8s.source.resource.spec.arguments.parameters.1.value
