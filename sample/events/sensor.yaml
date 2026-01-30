@@ -14,21 +14,22 @@ spec:
       eventSourceName: github-event-source
       eventName: release-listener
 
-  filters:
-    - name: file-path-filter
-      data:
-        - path: "body.commits"
-          type: string
-          value: 
-            - "sample/app/nextcloud.yaml"
-            - "sample/argocd/applicationset.yaml"
-          comparator: "regex"
+#   filters:
+#     - name: file-path-filter
+#       data:
+#         - path: "body.commits"
+#           type: string
+#           value: 
+#             - "sample/app/nextcloud.yaml"
+#             - "sample/argocd/applicationset.yaml"
+#           comparator: "regex"
 
   triggers:
     - template:
         name: sync-in-cluster
         # Only active on filtered push
-        conditions: "push-dep && file-path-filter"
+        # conditions: "push-dep && file-path-filter"
+        conditions: "push-dep"
         k8s:
           operation: create
           source:
